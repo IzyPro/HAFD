@@ -21,6 +21,7 @@ namespace HAFD.Models
 
         [Required]
         public GenderEnum Gender { get; set; }
+        public Hostel Hostel { get; set; }
 
         [Required]
         public UserStatusEnum UserStatus { get; set; }

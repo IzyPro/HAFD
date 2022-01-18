@@ -18,12 +18,14 @@ namespace HAFD.Controllers
     public class UserController : Controller
     {
         private IUserServices _userService;
+        IHostelService _hostelService;
         private IAzureService _azureService;
         private IMapper _mapper;
-        public UserController(IUserServices userService, IMapper mapper, IAzureService azureService)
+        public UserController(IUserServices userService, IMapper mapper, IAzureService azureService, IHostelService hostelService)
         {
             _userService = userService;
             _azureService = azureService;
+            _hostelService = hostelService;
             _mapper = mapper;
         }
 
@@ -100,6 +102,22 @@ namespace HAFD.Controllers
             }
             else
                 return View(result);
+        }
+
+        
+        public async Task<IActionResult> HostelApplication(int id)
+        {
+            var result = await _hostelService.Apply(id);
+            if (result.isSuccess)
+            {
+                ViewBag.Success = result.Message;
+                return View(result);
+            }
+            else
+            {
+                ViewBag.ErrorMsg = result.Message;
+                return View(result);
+            }
         }
     }
 }

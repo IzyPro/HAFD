@@ -29,6 +29,7 @@ namespace HAFD.Services
         private readonly IWebHostEnvironment _hostEnvironment;
         private DatabaseContext _context;
         private IUserServices _userServices;
+        Guid _filename = Guid.NewGuid();
 
         public AzureServices(IConfiguration configuration, IWebHostEnvironment hostEnvironment, DatabaseContext context, IUserServices userServices)
         {
@@ -87,18 +88,41 @@ namespace HAFD.Services
                 foreach (var faceImage in images)
                 {
                     string wwwRootPath = _hostEnvironment.WebRootPath;
-                    string fileName = Path.GetFileNameWithoutExtension(faceImage.FileName);
-                    string extension = Path.GetExtension(faceImage.FileName);
-                    fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
-                    path = Path.Combine(wwwRootPath, $"img{Path.PathSeparator}{fileName}");
-                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    path = Path.Combine(wwwRootPath, $"images\\{_filename}.png");
+                    using (var stream = new FileStream(path, FileMode.Open))
                     {
-                        await faceImage.CopyToAsync(fileStream);
-                        using (Stream imageStream = File.OpenRead(path))
-                        {
-                            PersistedFace face = await faceClient.PersonGroupPerson.AddFaceFromStreamAsync(personGroupId: personGroupId, personId: person.PersonId, image: imageStream);
-                        }
+                        PersistedFace face = await faceClient.PersonGroupPerson.AddFaceFromStreamAsync(personGroupId: personGroupId, personId: person.PersonId, image: stream);
                     }
+                    //using (var memoryStream = new MemoryStream())
+                    //{
+                    //    await faceImage.CopyToAsync(memoryStream);
+                    //    using (var img = System.Drawing.Image.FromStream(memoryStream, true))
+                    //    {
+                    //        string wwwRootPath = _hostEnvironment.WebRootPath;
+                    //        path = Path.Combine(wwwRootPath, $"images\\{_fi}.png");
+                    //        img.Save(path);
+                    //        using (var stream = new FileStream(path, FileMode.Open))
+                    //        {
+                    //            PersistedFace face = await faceClient.PersonGroupPerson.AddFaceFromStreamAsync(personGroupId: personGroupId, personId: person.PersonId, image: imageStream);
+                    //        }
+                    //    }
+                    //}
+
+
+
+                    //string wwwRootPath = _hostEnvironment.WebRootPath;
+                    //string fileName = Path.GetFileNameWithoutExtension(faceImage.FileName);
+                    //string extension = Path.GetExtension(faceImage.FileName);
+                    //fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension;
+                    //path = Path.Combine(wwwRootPath, $"images\\{fileName}");
+                    //using (var fileStream = new FileStream(path, FileMode.Create))
+                    //{
+                    //    await faceImage.CopyToAsync(fileStream);
+                    //    using (Stream imageStream = File.OpenRead(path))
+                    //    {
+                    //        PersistedFace face = await faceClient.PersonGroupPerson.AddFaceFromStreamAsync(personGroupId: personGroupId, personId: person.PersonId, image: imageStream);
+                    //    }
+                    //}
                 }
 
                 var user = new User
@@ -107,6 +131,7 @@ namespace HAFD.Services
                     Firstname = model.Firstname,
                     Lastname = model.Lastname,
                     Email = model.Email,
+                    UserName = model.Email,
                     Department = model.Department,
                     Gender = model.Gender,
                     PhoneNumber = model.PhoneNumber,
@@ -283,39 +308,25 @@ namespace HAFD.Services
                 IList<DetectedFace> detectedFaces = null;
                 List<DetectedFace> allDetectedFaces = new List<DetectedFace>();
                 // We use detection model 3 because we are not retrieving attributes.
-                foreach (var similarImage in image)
+                foreach (var file in image)
                 {
-                    string wwwRootPath = _hostEnvironment.WebRootPath;
-                    string fileName = Path.GetFileNameWithoutExtension(similarImage.FileName);
-                    string extension = Path.GetExtension(similarImage.FileName);
-                    fileName = fileName + DateTime.Now.ToString("yymmssfff") + extension; ;
-                    string path = Path.Combine(wwwRootPath, $"img\\{fileName}");
-
-                    //using (var fileStream = File.Create(path))
-                    //{
-                    //    using (var stream = File.Open(path, FileMode.Open, FileAccess.Write, FileShare.Read))
-                    //    {
-                    //        await similarImage.CopyToAsync(stream);
-                    //        detectedFaces = await faceClient.Face.DetectWithStreamAsync(fileStream, recognitionModel: recognition_model, detectionModel: DetectionModel.Detection03);
-                    //        if (detectedFaces.Count < 1)
-                    //            return null;
-                    //        foreach (var face in detectedFaces)
-                    //        {
-                    //            allDetectedFaces.Add(face);
-                    //        }
-                    //    }
-                    //}
-                    using (var fileStream = new FileStream(path, FileMode.Create))
+                    using (var memoryStream = new MemoryStream())
                     {
-                        await similarImage.CopyToAsync(fileStream);
-                        using (Stream imageStream = File.OpenRead(path))
+                        await file.CopyToAsync(memoryStream);
+                        using (var img = System.Drawing.Image.FromStream(memoryStream, true))
                         {
-                            detectedFaces = await faceClient.Face.DetectWithStreamAsync(imageStream, recognitionModel: recognition_model, detectionModel: DetectionModel.Detection03);
-                            if (detectedFaces.Count < 1)
-                                return null;
-                            foreach (var face in detectedFaces)
+                            string wwwRootPath = _hostEnvironment.WebRootPath;
+                            string path = Path.Combine(wwwRootPath, $"images\\{_filename}.png");
+                            img.Save(path);
+                            using (var stream = new FileStream(path, FileMode.Open))
                             {
-                                allDetectedFaces.Add(face);
+                                detectedFaces = await faceClient.Face.DetectWithStreamAsync(stream, recognitionModel: recognition_model, detectionModel: DetectionModel.Detection03);
+                                if (detectedFaces.Count < 1)
+                                    return null;
+                                foreach (var face in detectedFaces)
+                                {
+                                    allDetectedFaces.Add(face);
+                                }
                             }
                         }
                     }

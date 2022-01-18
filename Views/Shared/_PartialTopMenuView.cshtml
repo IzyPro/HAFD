@@ -38,7 +38,7 @@
                     @*<img src="~/assets/img/user/user.jpg" alt="" class="mw-100 mh-100 rounded-circle" />*@
                     <i class="fa fa-user fa-fw ml-auto text-gray-400 w-100"></i>
                 </div>
-                <div class="menu-text">@ViewBag.AppSettings.AppEmail</div>
+                <div class="menu-text">@HAFD.Helpers.TempUser.loginResponse.Email</div>
             </a>
             <div class="dropdown-menu dropdown-menu-right mr-lg-3">
                 <a class="dropdown-item d-flex align-items-center menu-text" asp-controller="Auth" asp-action="Logout">Log Out <i class="fa fa-toggle-off fa-fw ml-auto text-gray-400 f-s-16"></i></a>

@@ -101,7 +101,8 @@ namespace HAFD.Controllers
                     loginResponse.token = token;
 
                     HttpContext.Session.SetString("JWToken", token);
-                    return RedirectToAction("Dashboard", "User", loginResponse);
+                    TempUser.loginResponse = loginResponse;
+                    return RedirectToAction("Dashboard", "User");
                 }
             }
             else
@@ -134,13 +135,12 @@ namespace HAFD.Controllers
                     var result = await _azureService.AddPersonAsync(TempUser.NewUser, files);
                     if (result.isSuccess)
                     {
-                        return RedirectToAction("Dashboard", "Auth");
+                        return RedirectToAction("Dashboard", "User");
                     }
                     else
                     {
-                        ViewBag.ErrorMsg = result.Message;
-                        TempData["ErrorMsg"] = result.Message;
-                        return View();
+                        //return RedirectToAction("CaptureImage", "Auth");
+                        return Json(new { text = result.Message });
                     }
                 }
                 else

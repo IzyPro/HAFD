@@ -51,8 +51,9 @@
                 Webcam.upload(data,
                     '/Auth/CaptureImage',
                     function (code, text) {
-                        alert(@TempData["ErrorMsg"]);
-                        document.getElementById("err").textContent = "@TempData["ErrorMsg"]";
+                        const obj = JSON.parse(text);
+                        alert(obj.text);
+                        document.getElementById("err").textContent = obj.text;
                     });
             });
         }

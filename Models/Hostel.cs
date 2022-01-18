@@ -15,7 +15,6 @@ namespace HAFD.Models
         public string Corner { get; set; }
         [Required]
         public string Room { get; set; }
-        [Required]
-        public User Occupant { get; set; }
+        public bool IsAvailable { get; set; }
     }
 }

@@ -261,19 +261,6 @@ namespace HAFD.Services
 				};
 
 
-			//var user = new User
-			//{
-			//	Email = model.Email,
-			//	UserName = model.Email,
-			//	PhoneNumber = model.PhoneNumber,
-			//	Firstname = model.Firstname,
-			//	Lastname = model.Lastname,
-			//	//Image = model.Image,
-			//	Department = model.Department,
-			//	Gender = model.Gender,
-			//	UserStatus = UserStatusEnum.Active,
-			//	DateCreated = DateTime.Now,
-			//};
 
 			var result = await _userManager.CreateAsync(user, model.Password);
 
