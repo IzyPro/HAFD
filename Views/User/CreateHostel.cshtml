@@ -1,0 +1,22 @@
+﻿@model HAFD.Models.Hostel
+@{
+    ViewData["Title"] = "Password";
+    Layout = "~/Views/Shared/_MasterLayout.cshtml";
+}
+
+<link rel="stylesheet" href="~/css/user.css" />
+
+<div class="centerize">
+    <div class="m-auto text-center col-md-5 my-auto">
+        <p class="text-center text-success">@TempData["Success"]</p>
+        <p class="text-center text-danger">@TempData["Error"]</p>
+
+        <h2 class="text-center heading mb-5">New Hostel</h2>
+        <form asp-controller="User" asp-action="CreateHostel" method="post">
+            <input class="form-control m-2 col-md-10 mx-auto" asp-for="Name" placeholder="Name" required />
+            <input class="form-control m-2 col-md-10 mx-auto" asp-for="Room" placeholder="Room" required />
+            <input class="form-control m-2 col-md-10 mx-auto" asp-for="Corner" placeholder="Corner" required />
+            <button class="btn-lg m-2 mt-3 col-md-10 mx-auto" type="submit">Submit</button>
+        </form>
+    </div>
+</div>

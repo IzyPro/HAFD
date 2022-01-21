@@ -12,6 +12,7 @@ using HAFD.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
@@ -266,7 +267,10 @@ namespace HAFD.Services
 
 			if (result.Succeeded)
 			{
-				await _userManager.AddToRoleAsync(user, UserRolesEnum.User.ToString());
+				if(isAdmin)
+					await _userManager.AddToRoleAsync(user, UserRolesEnum.Admin.ToString());
+				else
+					await _userManager.AddToRoleAsync(user, UserRolesEnum.User.ToString());
 
 				//Send Email
 
@@ -471,7 +475,7 @@ namespace HAFD.Services
 		{
 			var userID = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
 			if (userID != null)
-				return await _userManager.FindByIdAsync(userID);
+				return await GetUserFromDBById(userID);
 			return null;
 		}
 
@@ -481,6 +485,12 @@ namespace HAFD.Services
 		public async Task<User> GetUserById(string userId)
 		{
 			return await _userManager.FindByIdAsync(userId);
+		}
+
+		//GET USER FROM DB BY ID
+		public async Task<User> GetUserFromDBById(string userId)
+		{
+			return await _context.Users.Include(x => x.Hostel).FirstOrDefaultAsync(x => x.Id == userId);
 		}
 
 

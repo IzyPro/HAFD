@@ -54,6 +54,16 @@
                         <span class="menu-text">Add New Admin User</span>
                     </a>
                 </div>
+                
+                <div class="menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "CreateHostel" ? "active" : "")">
+                    <a asp-controller="User" asp-action="CreateHostel" class="menu-link">
+                        <span class="menu-icon">
+                            <i class="fa fa-hotel"></i>
+                            @*<span class="menu-icon-label">6</span>*@
+                        </span>
+                        <span class="menu-text">Create Hostel</span>
+                    </a>
+                </div>
             }
             <div class="menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "ChangePassword" ? "active" : "")">
                 <a asp-controller="Auth" asp-action="ChangePassword" class="menu-link">
@@ -64,42 +74,6 @@
                     <span class="menu-text">Change Password</span>
                 </a>
             </div>
-
-            <div class="menu-item has-sub @(ViewContext.RouteData.Values["Action"].ToString() == "" ? "active" : ViewContext.RouteData.Values["Action"].ToString() == "Details" ? "active" : "")">
-                <a href="#" class="menu-link">
-                    <span class="menu-icon">
-                        <i class="fa fa-envelope"></i>
-                        <span class="menu-icon-label">6</span>
-                    </span>
-                    <span class="menu-text">Request Management</span>
-                    <span class="menu-caret"><b class="caret"></b></span>
-                </a>
-                <div class="menu-submenu">
-                    <div class="menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "Delivery" ? "active" : "")">
-                        <a asp-controller="Request" asp-action="Delivery" class="menu-link">
-                            <span class="menu-text">Delivery</span>
-                        </a>
-                    </div>
-                    <div class="menu-item @(ViewContext.RouteData.Values["Action"].ToString() == "Pickup" ? "active" : "")">
-                        <a asp-controller="Request" asp-action="Pickup" class="menu-link">
-                            <span class="menu-text">Pickup</span>
-                        </a>
-                    </div>
-                </div>
-            </div>
-
-
-
-            <div class="menu-item has-sub">
-
-
-
-            </div>
-
-
-
-
-
 
         </div>
         <!-- END menu -->

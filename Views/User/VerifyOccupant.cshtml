@@ -3,7 +3,7 @@
     ViewData["Title"] = "Verification";
 }
 <body class="container">
-    <p class="text-danger">@ViewBag.ErrorMsg</p>
+    <p id="err" class="text-danger">@TempData["ErrorMsg"]</p>
     <div class="col-md-6" style="padding-top:50px;">
         <div class="panel panel-default">
             <div class="panel-heading">Live Web Camera</div>
@@ -50,7 +50,14 @@
                 Webcam.upload(data,
                     '/User/VerifyOccupant',
                     function (code, text) {
-                        alert('Snapshot/Image captured successfully...');
+                        const obj = JSON.parse(text);
+                        if(obj.success){
+                            window.location = obj.text;
+                        }
+                        else{
+                            alert(obj.text);
+                            document.getElementById("err").textContent = obj.text;
+                        }
                     });
             });
         }

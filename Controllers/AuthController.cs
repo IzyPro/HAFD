@@ -58,6 +58,7 @@ namespace HAFD.Controllers
                 Firstname = model.Firstname,
                 Lastname = model.Lastname,
                 Email = model.Email,
+                UserName = model.Email,
                 Department = model.Department,
                 Gender = model.Gender,
                 PhoneNumber = model.PhoneNumber,
@@ -213,14 +214,23 @@ namespace HAFD.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IActionResult> ChangePassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
         public async Task<IActionResult> ChangePassword([FromForm] ChangePasswordViewModel model)
         {
             var result = await _userService.ChangePasswordAsync(model);
             if (result.isSuccess)
             {
-                return View(result);
+                TempData["Success"] = result.Message;
+                return View();
             }
-            return View(result);
+            TempData["Error"] = result.Message;
+            return View();
         }
 
         public async Task<IActionResult> DeactivateAccount()

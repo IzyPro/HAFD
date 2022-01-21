@@ -9,6 +9,7 @@ using HAFD.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using HAFD.Models;
+using HAFD.Helpers;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -53,12 +54,13 @@ namespace HAFD.Controllers
                     var (result, response) = await _azureService.IdentifyFacesAsync(files);
                     if (result.isSuccess)
                     {
-                        return RedirectToAction(nameof(VerificationResult), response);
+                        TempUser.VerificationResult = response;
+                        return Json(new { text = Url.Action(nameof(VerificationResult), "User"), success = true });
+                        //return RedirectToAction("VerificationResult", "User");
                     }
                     else
                     {
-                        ViewBag.ErrorMsg = result.Message;
-                        return View();
+                        return Json(new { text = result.Message, success = false });
                     }
                 }
                 else
@@ -75,9 +77,9 @@ namespace HAFD.Controllers
 
 
         [HttpGet]
-        public IActionResult VerificationResult(List<User> users)
+        public IActionResult VerificationResult()
         {
-            return View(users);
+            return View();
         }
 
         public async Task<IActionResult> GetUserProfile()
@@ -104,19 +106,48 @@ namespace HAFD.Controllers
                 return View(result);
         }
 
-        
-        public async Task<IActionResult> HostelApplication(int id)
+        [HttpGet]
+        public async Task<IActionResult> HostelApplication()
         {
-            var result = await _hostelService.Apply(id);
+            return View(await _hostelService.GetAllAvailableHostels());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> HostelApplication([FromForm]HostelApplicationViewModel model)
+        {
+            var result = await _hostelService.Apply(model.HostelID);
             if (result.isSuccess)
             {
                 ViewBag.Success = result.Message;
-                return View(result);
+                return View();
             }
             else
             {
                 ViewBag.ErrorMsg = result.Message;
-                return View(result);
+                return View();
+            }
+        }
+
+        
+        [HttpGet]
+        public IActionResult CreateHostel()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateHostel(Hostel model)
+        {
+            var result = await _hostelService.CreateHostel(model);
+            if (result.isSuccess)
+            {
+                TempData["Success"] = result.Message;
+                return View();
+            }
+            else
+            {
+                TempData["Error"] = result.Message;
+                return View();
             }
         }
     }
