@@ -11,14 +11,15 @@
         <h1>Register</h1>
         <p>Enter your details</p>
         <p class="text-danger">@ViewBag.ErrorMsg</p>
-        <form asp-controller="Auth" asp-action="Register" method="post">
+        <p class="text-danger">@ViewBag.Success</p>
+        <form asp-controller="Auth" asp-action="OnboardAdminUser" method="post">
             <div class="row">
                 <input class="form-control m-2 col-md-5" asp-for="Firstname" type="text" placeholder="Firstname" required />
                 <input class="form-control m-2 col-md-5" asp-for="Lastname" type="text" placeholder="Lastname" required />
                 <input class="form-control m-2 col-md-5" asp-for="Email" type="email" placeholder="Email Address" required />
                 <input class="form-control m-2 col-md-5" asp-for="PhoneNumber" type="tel" placeholder="Phone Number" maxlength="11" onkeypress="return (event.charCode !=8 && event.charCode ==0 || (event.charCode >= 48 && event.charCode <= 57))" required />
 
-                <input class="form-control m-2 col-md-5 mt-3" asp-for="Department" type="text" placeholder="Country" required />
+                <input class="form-control m-2 col-md-5 mt-3" asp-for="Department" type="text" placeholder="Department" required />
                 <div class="text-left m-2">
                     <b>Gender: </b><br />
                     @foreach (var gender in System.Enum.GetValues(typeof(HAFD.Enums.GenderEnum)))

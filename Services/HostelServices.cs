@@ -1,11 +1,12 @@
-﻿using AutoMapper.Configuration;
-using HAFD.Data;
+﻿using HAFD.Data;
 using HAFD.Models;
 using HAFD.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,6 +15,8 @@ namespace HAFD.Services
     public interface IHostelService
     {
         Task<ResponseManager> Apply(int id);
+        Task<List<Hostel>> GetAllAvailableHostels();
+        Task<ResponseManager> CreateHostel(Hostel model);
     }
     public class HostelServices : IHostelService
     {
@@ -49,11 +52,12 @@ namespace HAFD.Services
                 };
             var hostel = await GetHostelWithId(id);
             user.Hostel = hostel;
-            hostel.IsAvailable = false;
-
-            _context.Hostels.Update(hostel);
             var result = await _userManager.UpdateAsync(user);
-            if (result.Succeeded)
+
+            hostel.IsAvailable = false;
+            _context.Hostels.Update(hostel);
+            var save = await _context.SaveChangesAsync();
+            if (save >= 1 && result.Succeeded)
                 return new ResponseManager
                 {
                     isSuccess = true,
@@ -70,6 +74,36 @@ namespace HAFD.Services
         public async Task<Hostel> GetHostelWithId(int id)
         {
             return await _context.Hostels.FirstOrDefaultAsync(x => x.Id == id);
+        }
+
+        public async Task<List<Hostel>> GetAllAvailableHostels()
+        {
+            return await _context.Hostels.Where(x => x.IsAvailable).ToListAsync();
+        }
+
+        public async Task<ResponseManager> CreateHostel(Hostel model)
+        {
+            var hostel = new Hostel
+            {
+                Name = model.Name,
+                Room = model.Room,
+                Corner = model.Corner,
+                IsAvailable = true
+            };
+            await _context.Hostels.AddAsync(hostel);
+            var result = await _context.SaveChangesAsync();
+            if (result >= 1)
+                return new ResponseManager
+                {
+                    isSuccess = true,
+                    Message = "Hostel Created Successfully"
+                };
+            else
+                return new ResponseManager
+                {
+                    isSuccess = false,
+                    Message = "Unable to create hostel"
+                };
         }
     }
 }

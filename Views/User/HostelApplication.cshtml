@@ -2,3 +2,39 @@
     ViewData["Title"] = "Hostel Application";
     Layout = "~/Views/Shared/_MasterLayout.cshtml";
 }
+@model List<Hostel>;
+
+
+<link rel="stylesheet" href="~/css/user.css" />
+
+<div class="centerize">
+    <div class="m-auto text-center col-md-5 my-auto">
+        <p class="text-center text-success">@ViewBag.Success</p>
+        <p class="text-center text-danger">@ViewBag.ErrorMsg</p>
+        <p class="text-center">Select your preferred hostel from the dropdown and click on apply</p>
+        <form id="applicationForm" asp-controller="User" asp-action="HostelApplication" asp-route-id="hostels">
+            <select class="form-control m-1" name="HostelID" required>
+                @if (@Model != null)
+                {
+                    @foreach (var hostel in Model)
+                    {
+                        <option value="@hostel.Id">@hostel.Name - @hostel.Room - @hostel.Corner</option>
+                    }
+                }
+            </select>
+            <button class="btn-lg m-2 mt-3" id="Btn" type="submit" onclick="showLoader()">Apply</button>
+        </form>
+    </div>
+</div>
+
+@section pageScripts{
+
+<script>
+    function showLoader() {
+        var form = document.getElementById("applicationForm");
+        if (form.checkValidity()) {
+            $('#Btn').html('Please wait... <i class="fa fa-refresh fa-spin">');
+        }
+    }
+</script>
+}

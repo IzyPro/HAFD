@@ -13,6 +13,7 @@ using HAFD.Enums;
 using HAFD.Helpers;
 using HAFD.Models;
 using HAFD.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace HAFD.Services
 {
@@ -273,7 +274,7 @@ namespace HAFD.Services
                         if (confidence >= 0.5)
                         {
                             //var user = _context.Users.Where(x => x.Id == person.PersonId.ToString()).FirstOrDefault();
-                            var user = _context.Users.Where(x => x.Email == person.Name).FirstOrDefault();
+                            var user = await _context.Users.Include(x => x.Hostel).FirstOrDefaultAsync(x => x.Email == person.Name);
                             identifiedPersons.Add(user);
                         }
                     }

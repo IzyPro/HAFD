@@ -18,6 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Http;
+using System.Net;
 
 namespace HAFD
 {
@@ -45,9 +46,9 @@ namespace HAFD
 			//IDENTITY
 			services.AddIdentity<User, IdentityRole>(options =>
 			{
-				options.Password.RequireDigit = true;
-				options.Password.RequireLowercase = true;
-				options.Password.RequireUppercase = true;
+				//options.Password.RequireDigit = true;
+				//options.Password.RequireLowercase = true;
+				//options.Password.RequireUppercase = true;
 				options.Password.RequiredLength = 5;
 				options.User.RequireUniqueEmail = true;
 			}).AddEntityFrameworkStores<DatabaseContext>()
@@ -60,8 +61,6 @@ namespace HAFD
 				feature.AddPolicy(
 					"CorsPolicy",
 					apiPolicy => apiPolicy
-						//.AllowAnyOrigin()
-						//.WithOrigins("http://localhost:4200")
 						.AllowAnyHeader()
 						.AllowAnyMethod()
 						.SetIsOriginAllowed(host => true)
@@ -110,6 +109,7 @@ namespace HAFD
 
 			services.AddScoped<IAzureService, AzureServices>();
 			services.AddScoped<IUserServices, UserServices>();
+			services.AddScoped<IHostelService, HostelServices>();
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -129,6 +129,15 @@ namespace HAFD
 			}
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
+			app.UseStatusCodePages(async context => {
+				var request = context.HttpContext.Request;
+				var response = context.HttpContext.Response;
+
+				if (response.StatusCode == (int)HttpStatusCode.Unauthorized)
+				{
+					response.Redirect("/Auth/Login?returnUrl=" + request.Path);
+				}
+			});
 
 			app.UseRouting();
 
