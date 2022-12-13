@@ -83,6 +83,13 @@ namespace HAFD.Services
 
         public async Task<ResponseManager> CreateHostel(Hostel model)
         {
+            var existingHostel = await _context.Hostels.FirstOrDefaultAsync(x => x.Corner.ToLower() == model.Corner.ToLower() && x.Name.ToLower() == model.Name.ToLower() && x.Room.ToLower() == model.Room.ToLower());
+            if (existingHostel != null)
+                return new ResponseManager
+                {
+                    isSuccess = false,
+                    Message = "Bedspace already exists"
+                };
             var hostel = new Hostel
             {
                 Name = model.Name,

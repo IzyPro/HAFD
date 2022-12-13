@@ -11,7 +11,7 @@
         <h1>Register</h1>
         <p>Enter your details</p>
         <p class="text-danger">@ViewBag.ErrorMsg</p>
-        <p class="text-danger">@ViewBag.Success</p>
+        <p class="text-success">@ViewBag.Success</p>
         <form asp-controller="Auth" asp-action="OnboardAdminUser" method="post">
             <div class="row">
                 <input class="form-control m-2 col-md-5" asp-for="Firstname" type="text" placeholder="Firstname" required />

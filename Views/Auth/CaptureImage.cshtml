@@ -52,8 +52,13 @@
                     '/Auth/CaptureImage',
                     function (code, text) {
                         const obj = JSON.parse(text);
-                        alert(obj.text);
-                        document.getElementById("err").textContent = obj.text;
+                        if(obj.text == "success"){
+                            window.location = "https://localhost:44353/";
+                            alert("Registration Successful");
+                        }else{
+                            alert(obj.text);
+                            document.getElementById("err").textContent = obj.text;
+                        }
                     });
             });
         }

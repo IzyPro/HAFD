@@ -9,7 +9,7 @@
         {
             <div class="text-left">
                 <h2 class="text-center heading mb-5">Verification Result</h2>
-                <img src="data:image/png;base64, @Convert.ToBase64String(@user.Image)">
+                <img src="data:image/png;base64, @Convert.ToBase64String(@user.Image)" style="border-radius:50%;width: 150px;height: 150px;">
                 <h2 class="text-left m-3">@user.Firstname @user.Lastname</h2>
                 <div class="row">
                     <h5 class="col-md-6">Email: @user.Email</h5>

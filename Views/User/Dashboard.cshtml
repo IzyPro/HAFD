@@ -8,7 +8,7 @@
 @{ if (@user != null)
     {
     <div class="">
-        <img src="data:image/png;base64, @Convert.ToBase64String(user.Image)">
+        <img src="data:image/png;base64, @Convert.ToBase64String(user.Image)" style="border-radius:50%;width: 150px;height: 150px;">
         <h2 class="text-left">@user.Firstname @user.Lastname</h2>
         <div class="row text-left">
             <h5 class="col-md-6 ">Email: @user.Email</h5>

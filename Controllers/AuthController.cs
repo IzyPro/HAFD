@@ -133,10 +133,13 @@ namespace HAFD.Controllers
                 var files = HttpContext.Request.Form.Files;
                 if (files != null)
                 {
+                    if (TempUser.NewUser == null)
+                        return Json(new { text = "Invalid User Details" });
+
                     var result = await _azureService.AddPersonAsync(TempUser.NewUser, files);
                     if (result.isSuccess)
                     {
-                        return RedirectToAction("Dashboard", "User");
+                        return Json(new { text = "success" });
                     }
                     else
                     {
