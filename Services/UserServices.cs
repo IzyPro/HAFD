@@ -82,7 +82,7 @@ namespace HAFD.Services
 			{
 				return new ResponseManager
 				{
-					Message = result.Errors.Select(e => e.Description).ToString(),
+					Message = String.Join(",", result.Errors.Select(e => e.Description).ToString()),
 					isSuccess = false,
 				};
 			}
@@ -158,7 +158,7 @@ namespace HAFD.Services
 			return new ResponseManager
 			{
 				isSuccess = false,
-				Message = result.Errors.Select(e => e.Description).ToString(),
+				Message = String.Join(",", result.Errors.Select(e => e.Description).ToString())
 			};
 		}
 
@@ -282,11 +282,10 @@ namespace HAFD.Services
 			}
 			else
 			{
-				var x = result.Errors.Select(e => e.Description).ToList();
 				return new ResponseManager
 				{
 					isSuccess = false,
-					Message = String.Join(",", x)
+					Message = String.Join(",", result.Errors.Select(e => e.Description).ToString()),
 				};
 			}
 		}
@@ -355,7 +354,7 @@ namespace HAFD.Services
 			else
 				return new ResponseManager
 				{
-					Message = result.Errors.Select(e => e.Description).ToString(),
+					Message = String.Join(",", result.Errors.Select(e => e.Description).ToString()),
 					isSuccess = false,
 				};
 		}
@@ -401,7 +400,7 @@ namespace HAFD.Services
 			{
 				response = new ResponseManager
 				{
-					Message = result.Errors.Select(e => e.Description).ToString(),
+					Message = String.Join(",", result.Errors.Select(e => e.Description).ToString()),
 					isSuccess = false,
 				};
 				return new Tuple<ResponseManager, User>(response, null);
@@ -464,7 +463,7 @@ namespace HAFD.Services
 				return new ResponseManager
 				{
 					isSuccess = false,
-					Message = result.Errors.Select(e => e.Description).ToString(),
+					Message = String.Join(",", result.Errors.Select(e => e.Description).ToString())
 				};
 			}
 		}

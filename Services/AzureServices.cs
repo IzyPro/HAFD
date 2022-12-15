@@ -89,7 +89,7 @@ namespace HAFD.Services
                 foreach (var faceImage in images)
                 {
                     string wwwRootPath = _hostEnvironment.WebRootPath;
-                    path = Path.Combine(wwwRootPath, $"images\\{_filename}.png");
+                    path = Path.Combine(wwwRootPath, $"images{Path.DirectorySeparatorChar}{_filename}.png");
                     using (var stream = new FileStream(path, FileMode.Open))
                     {
                         PersistedFace face = await faceClient.PersonGroupPerson.AddFaceFromStreamAsync(personGroupId: personGroupId, personId: person.PersonId, image: stream);
@@ -317,7 +317,7 @@ namespace HAFD.Services
                         using (var img = System.Drawing.Image.FromStream(memoryStream, true))
                         {
                             string wwwRootPath = _hostEnvironment.WebRootPath;
-                            string path = Path.Combine(wwwRootPath, $"images\\{_filename}.png");
+                            string path = Path.Combine(wwwRootPath, $"images{Path.DirectorySeparatorChar}{_filename}.png");
                             img.Save(path);
                             using (var stream = new FileStream(path, FileMode.Open))
                             {

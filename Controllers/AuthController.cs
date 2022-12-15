@@ -139,12 +139,12 @@ namespace HAFD.Controllers
                     var result = await _azureService.AddPersonAsync(TempUser.NewUser, files);
                     if (result.isSuccess)
                     {
-                        return Json(new { text = "success" });
+                        return Json(new { text = Url.Action(nameof(Login), "Auth"), success = true });
                     }
                     else
                     {
                         //return RedirectToAction("CaptureImage", "Auth");
-                        return Json(new { text = result.Message });
+                        return Json(new { text = result.Message, success = false });
                     }
                 }
                 else
